@@ -5,8 +5,6 @@ SwitchToWindowsTerminal()
   windowHandleId := WinExist("ahk_exe WindowsTerminal.exe")
   windowExistsAlready := windowHandleId > 0
 
-  MsgBox, %windowHandleId%
-
   ; If the Windows Terminal is already open, determine if we should put it in focus or minimize it.
   if (windowExistsAlready = true)
   {
