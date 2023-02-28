@@ -10,6 +10,15 @@ sudo apt install git -y
 
 sudo apt install termius -y
 
+sudo apt install python3.10-venv -y
+
+if [[ -e ~/Documents/repos ]]; then
+	echo "Path exist" 
+else
+	sudo mkdir -P ~/Documents/repos
+	echo "Created path '~/Documents/repos'"
+fi
+
 # Check's if display exists and install GUI apps 
 if [ -n "${DISPLAY+x}" ]; then 
 	sudo apt install i3 -y
@@ -30,20 +39,15 @@ fi
 ## Instaing latest nvim and allow for global access of the command "nvim"
 # Also adds nvim dependencies 
 
-wget -P ~/ https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
-
-ls ~/ 
-
-sudo chmod u+x ~/nvim.appimage
-
-echo " next steps"
-
-mv ~/nvim.appimage ~/nvim
-ls -lah ~/
-
-sudo ln -s ~/nvim /usr/bin/
-
-ls -lah /usr/bin | grep "nv"
+#wget -P ~/ https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+#
+#sudo chmod u+x ~/nvim.appimage
+#
+#mv ~/nvim.appimage ~/nvim
+#
+#sudo ln -s ~/nvim /usr/bin/
+#
+#ls -lah /usr/bin | grep "nv"
 
 
 #sudo apt install python3-neovim -y
@@ -54,9 +58,9 @@ ls -lah /usr/bin | grep "nv"
 
 ## Kickstarting nvim 
 
-#git clone https://github.com/JonGonzal/kickstart.nvim.git
+# Creates the NVIM environment
+git clone https://github.com/JonGonzal/kickstart.nvim.git ~/Documents/repos/
 
-#mv "kickstart.nvim/" "nvim"
+sudo mv ~/Documents/repos/kickstart.nvim/ ~/.config/
 
-
-#sudo mv "nvim/" "~/.config/"
+mv ~/.config/kickstart.nvim/ ~/.config/nvim
