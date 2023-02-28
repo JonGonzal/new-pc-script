@@ -16,6 +16,11 @@ sudo apt install termius -y
 
 sudo apt install python3.10-venv -y
 
+# Update Node , used by some LSP's.
+sudo npm cache clean -f
+sudo npm install -g n 
+sudo n stable
+
 if [[ -e ~/Documents/repos ]]; then
 	echo "Path exist" 
 else
