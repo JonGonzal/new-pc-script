@@ -29,21 +29,21 @@ fi
 
 ## Instaing latest nvim and allow for global access of the command "nvim"
 # Also adds nvim dependencies 
-user_dir = /home/$USER
-wget -P $user_dir https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
 
-ls $user_dir
+wget -P ~/ https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
 
-sudo chmod u+x $user_dir/nvim.appimage
+ls ~/ 
+
+sudo chmod u+x ~/nvim.appimage
 
 echo " next steps"
 
-#mv "~/nvim.appimage" "~/nvim"
+mv ~/nvim.appimage ~/nvim
 ls -lah ~/
 
-#ls -lah /usr/bin | grep "nv"
-#sudo ln -s ~/nvim /usr/bin/
+sudo ln -s ~/nvim /usr/bin/
 
+ls -lah /usr/bin | grep "nv"
 
 
 #sudo apt install python3-neovim -y
