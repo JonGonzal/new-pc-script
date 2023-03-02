@@ -16,6 +16,11 @@ sudo apt install termius -y
 
 sudo apt install python3.10-venv -y
 
+sudo apt install snapq
+
+sudo snap install --classic code
+
+
 # Update Node , used by some LSP's.
 sudo npm cache clean -f
 sudo npm install -g n 
@@ -56,6 +61,10 @@ mv ~/nvim.appimage ~/nvim
 
 sudo ln -s ~/nvim /usr/bin/
 
+# wget installs 
+wget -P ~/ 'https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64'
+
+sudo apt install ~/*.deb
 
 
 # Kickstarting nvim 
