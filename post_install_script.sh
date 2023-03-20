@@ -18,7 +18,11 @@ sudo apt install python3.10-venv -y
 
 sudo apt install snapq
 
+sudo apt install fuse
+
 sudo snap install --classic code
+
+mkdir -p ~/Documents/repos/
 
 
 # Update Node , used by some LSP's.
@@ -69,16 +73,16 @@ sudo apt install ~/*.deb
 
 # Kickstarting nvim 
 # Creates the NVIM environment
-git clone https://github.com/JonGonzal/kickstart.nvim.git ~/Documents/repos/
+git clone https://github.com/JonGonzal/kickstart.nvim.git ~/Documents/repos/kickstart_nvim
 
-sudo mv ~/Documents/repos/kickstart.nvim/ ~/.config/
+sudo mv ~/Documents/repos/kickstart_nvim/ ~/.config/
 
-mv ~/.config/kickstart.nvim/ ~/.config/nvim
+mv ~/.config/kickstart_nvim/ ~/.config/nvim
 
 
 
 # Installs personal configs 
-git clone https://github.com/JonGonzal/tools.git ~/Documents/repos/
+git clone https://github.com/JonGonzal/tools.git ~/Documents/repos/tools/
 
 sudo cp ~/Documents/repos/tools/.bashrc ~/
 sudo cp ~/Documents/repos/tools/.tmux.config ~/
