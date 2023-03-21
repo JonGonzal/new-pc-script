@@ -84,6 +84,7 @@ mv ~/.config/kickstart_nvim/ ~/.config/nvim
 # Installs personal configs 
 git clone https://github.com/JonGonzal/tools.git ~/Documents/repos/tools/
 
+sudo cp -f ~/Documents/repos/tools/i3_config ~/.config/i3/config
 sudo cp ~/Documents/repos/tools/.bashrc ~/
 sudo cp ~/Documents/repos/tools/.tmux.config ~/
 
