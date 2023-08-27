@@ -22,6 +22,8 @@ sudo apt install fuse
 
 sudo snap install --classic code
 
+sudo apt install autorandr
+
 mkdir -p ~/Documents/repos/
 
 
