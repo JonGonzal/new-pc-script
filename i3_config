@@ -116,9 +116,6 @@ bindsym $mod+a focus parent
 exec --no-startup-id xrandr --output DP-2-1 --rotate right 
 exec --no-startup-id xrandr --output DP-1-2 --right-of DP-2-1
 
-
-
-
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
 set $ws1 "1"
@@ -194,4 +191,5 @@ bindsym $mod+r mode "resize"
 # finds out, if available)
 bar {
         status_command i3status
+	font pango:monospace 12
 }
