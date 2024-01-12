@@ -4,6 +4,7 @@ sudo apt install python3-neovim -y
 sudo apt install npm -y
 sudo apt install clang -y
 sudo apt install tmux -y
+sudo apt install brightnessctl -y
 sudo apt install git -y
 sudo apt install termius -y
 sudo apt install python3.10-venv -y
