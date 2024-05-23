@@ -123,3 +123,4 @@ if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] &&
   exec tmux
 fi
 
+export EDITOR="/usr/bin/nvim"
