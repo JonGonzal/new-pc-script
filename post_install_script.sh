@@ -53,6 +53,7 @@ wget -P ~/ https://github.com/neovim/neovim/releases/download/stable/nvim.appima
 sudo chmod u+x ~/nvim.appimage
 
 mv ~/nvim.appimage ~/usr/bin/nvim
+sudo chmod 755 ~/usr/bin/nvim
 
 # Kickstarting nvim 
 # Creates the NVIM environment
