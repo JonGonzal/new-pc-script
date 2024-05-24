@@ -8,10 +8,11 @@ sudo apt install brightnessctl -y
 sudo apt install git -y
 sudo apt install termius -y
 sudo apt install python3.10-venv -y
-sudo apt install snapq
-sudo apt install fuse
+sudo apt install snapq -y
+sudo apt install fuse -y
+
 sudo snap install --classic code
-sudo apt install autorandr
+sudo apt install autorandr -y
 
 mkdir -p /mnt/dev
 mkdir -p ~/documents/repos/
@@ -47,9 +48,13 @@ sudo mv -f ~/nvim.appimage /usr/bin/nvim
 sudo chmod 755 /usr/bin/nvim
 
 # Kickstarting nvim, creates the NVIM environment
-sudo cp -fr ~/new-pc-script/kickstart_nvim ~/.config/nvim
+sudo mkdir -p ~/.config/nvim
+
+sudo cp -fra ~/new-pc-script/kickstart_nvim/. ~/.config/nvim
+
 
 # Installs personal configs 
+sudo mkdir -p ~/.config/i3/config
 sudo cp -f ~/new-pc-script/i3_config ~/.config/i3/config
 sudo cp ~/new-pc-script/.bashrc ~/
 sudo cp ~/new-pc-script/.tmux.conf ~/
