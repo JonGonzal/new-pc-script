@@ -266,6 +266,26 @@ require('telescope').setup {
       },
     },
   },
+   pickers = {
+    find_files = {
+       hidden = true,
+       no_ignore = true,
+       find_command = {
+          'rg',
+          '--files',
+          '--color=never',
+          '--no-heading',
+          '--line-number',
+          '--column',
+          '--smart-case',
+          '--hidden',
+          '--glob',
+          '!{.git/*,.svelte-kit/*,target/*,node_modules/*,.venv/*}',
+          '--path-separator',
+          '/',
+       },
+    }
+ }
 }
 
 -- Enable telescope fzf native, if installed
