@@ -1,6 +1,8 @@
 ## Personal linux env for dev
 sudo apt update; sudo apt upgrade -y
 sudo apt install python3-neovim -y
+sudo apt install python3-venv
+sudo apt install python3
 sudo apt install npm -y
 sudo apt install clang -y
 sudo apt install tmux -y
