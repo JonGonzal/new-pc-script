@@ -52,7 +52,7 @@ sudo chmod 755 /usr/bin/nvim
 # Kickstarting nvim, creates the NVIM environment
 sudo mkdir -p ~/.config/nvim
 
-sudo cp -fra ~/new-pc-script/kickstart_nvim/. ~/.config/nvim
+sudo cp -fra ~/new-pc-script/nvim/. ~/.config/nvim
 
 
 # Installs personal configs 
