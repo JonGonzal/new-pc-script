@@ -17,15 +17,16 @@ sudo apt install -y \
 	brightnessctl  \
 	git  \
 	fuse  \
-	autorandr
+	autorandr \
+	ripgrep
 
 echo "Creating directories..."
 mkdir -p "$HOME/documents/repos/"
 
 echo "Updating npm..."
 # Update Node , used by some LSP's.
-sudo npm cache clean -f
-sudo npm install -g n 
+sudo npm cache clean -f --verbose
+sudo npm install -g n  --verbose
 sudo n stable
 
 
