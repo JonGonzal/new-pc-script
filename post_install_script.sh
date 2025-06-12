@@ -1,63 +1,53 @@
-## Personal linux env for dev
-sudo apt update; sudo apt upgrade -y
-sudo apt install python3-neovim -y
-sudo apt install python3-venv
-sudo apt install python3
-sudo apt install npm -y
-sudo apt install clang -y
-sudo apt install tmux -y
-sudo apt install brightnessctl -y
-sudo apt install git -y
-sudo apt install termius -y
-sudo apt install python3.10-venv -y
-sudo apt install snapq -y
-sudo apt install fuse -y
+#! /bin/bash
 
-sudo snap install --classic code
-sudo apt install autorandr -y
+set -e
 
-mkdir -p /mnt/dev
-mkdir -p ~/documents/repos/
+echo "Starting dev environment setup..."
 
+echo "Installing packages..."
+
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y \
+	python3-neovim  \
+	python3-venv \
+	python3 \
+	npm  \
+	clang  \
+	tmux  \
+	brightnessctl  \
+	git  \
+	fuse  \
+	autorandr
+
+echo "Creating directories..."
+mkdir -p "$HOME/documents/repos/"
+
+echo "Updating npm..."
 # Update Node , used by some LSP's.
 sudo npm cache clean -f
 sudo npm install -g n 
 sudo n stable
 
-if [[ -e ~/documents/repos ]]; then
-	echo "Path exist" 
-else
-	sudo mkdir -P ~/documents/repos
-	echo "Created path '~/documents/repos'"
-fi
 
-# Check's if display exists and install GUI apps 
-if [ -n "${DISPLAY+x}" ]; then 
-	sudo apt install i3 -y
-	sudo apt install gimp -y
-
-	# Installing latest chrome
-	wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-	sudo apt install ./google-chrome-stable_current_amd64.deb -y
-	rm google-chrome-stable_current_amd64.deb
-fi
-
+echo "Installing latest Neovim..."
 # Installing latest nvim and allow for global access of the command "nvim"
 # Also adds nvim dependencies 
-wget -P ~/ https://github.com/neovim/neovim/releases/download/stable/nvim.appimage
-sudo chmod u+x ~/nvim.appimage
-sudo mv -f ~/nvim.appimage /usr/bin/nvim
+
+wget -P . https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.appimage -O nvim.appimage
+sudo chmod u+x nvim.appimage
+sudo mv -f nvim.appimage /usr/bin/nvim
 sudo chmod 755 /usr/bin/nvim
 
-# Kickstarting nvim, creates the NVIM environment
-sudo mkdir -p ~/.config/nvim
 
-sudo cp -fra ~/new-pc-script/nvim/. ~/.config/nvim
+echo "Setting up Neovim configs..."
+sudo mkdir -p "$HOME/.config/nvim"
+sudo cp -fra nvim/. "$HOME/.config/nvim"
 
 
-# Installs personal configs 
-sudo mkdir -p ~/.config/i3/config
-sudo cp -f ~/new-pc-script/i3_config ~/.config/i3/config
-sudo cp ~/new-pc-script/.bashrc ~/
-sudo cp ~/new-pc-script/.tmux.conf ~/
+echo "Applying personal configs..."
+mkdir -p "$HOME/.config/i3/config"
+cp -f i3_config "$HOME/.config/i3/config"
+cp .bashrc "$HOME/"
+cp .tmux.conf "$HOME/"
 
+echo "Environment setup completed."
