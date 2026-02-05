@@ -23,11 +23,11 @@ sudo apt install -y \
 echo "Creating directories..."
 mkdir -p "$HOME/documents/repos/"
 
-echo "Updating npm..."
-# Update Node , used by some LSP's.
-sudo npm cache clean -f --verbose
-sudo npm install -g n  --verbose
-sudo n stable
+# echo "Updating npm..."
+# # Update Node , used by some LSP's.
+# sudo npm cache clean -f --verbose
+# sudo npm install -g n  --verbose
+# sudo n stable
 
 
 echo "Installing latest Neovim..."
