@@ -68,7 +68,7 @@ unset color_prompt force_color_prompt
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
 xterm*|rxvt*)
-    PS1="\t \[\e[32m\][\[\e[m\]\[\e[32m\]\u\[\e[m\]\[\e[32m\]@\[\e[m\]\[\e[32m\]\h\[\e[m\] \[\e[32m\]\W\[\e[m\]\[\e[32m\]]\[\e[m\]\[\e[32m\]\\$\[\e[m\]  "
+    PS1="\t \[\e[32m\][\[\e[m\]\[\e[32m\]\u\[\e[m\]\[\e[32m\]@\[\e[m\]\[\e[32m\]\[\e[m\] \[\e[32m\]\W\[\e[m\]\[\e[32m\]]\[\e[m\]\[\e[32m\]\\$\[\e[m\]  "
     ;;
 *)
     ;;
@@ -117,10 +117,38 @@ if ! shopt -oq posix; then
   fi
 fi
 
-cd /mnt/Dev
-
 if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
   exec tmux
 fi
 
 export EDITOR="/usr/bin/nvim"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+
+export NODE_EXTRA_CA_CERTS="/usr/local/share/ca-certificates/bundle.pem"
+export CURL_CA_BUNDLE="/usr/local/share/ca-certificates/bundle.pem"
+export SSL_CERT_FILE="/usr/local/share/ca-certificates/tmobile-ca-bundle.crt"
+export REQUESTS_CA_BUNDLE="/usr/local/share/ca-certificates/tmobile-ca-bundle.crt"
+export SSL_CERT_DIR="/usr/local/share/ca-certificates/"
+export GITLAB_CA_CERT="/usr/local/share/ca-certificates/tmobile-ca-bundle.crt"
+
+export PATH="$HOME/.local/bin:$PATH"
+
+alias glp='git log --pretty=format:"%C(yellow)%h%Creset - %C(green)%an%Creset, %ar : %s"'
+
+export TERM=xterm-256color
+
+chrome() {
+  local exe=/mnt/c/Program\ Files/Google/Chrome/Application/chrome.exe
+  local target="${1:-}"
+  if [[ -f "$target" ]]; then
+    "$exe" "$(wslpath -w "$(realpath "$target")")"
+  else
+    "$exe" "$target"
+  fi
+}
+
+complete -f chrome
