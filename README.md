@@ -32,6 +32,7 @@ Tools used to improve workflow. Installs preferred software and applies personal
    chmod +x install.sh
    ./install.sh
    ```
+3. For 'folke/which-key.nvim' to work in WSL2, you will need to install `JetBrainsMono Nerd Font` from [Nerdfonts]("https://www.nerdfonts.com/font-downloads").
 
 The script will update apt, install packages, download the latest Neovim stable release, and copy all config files to their target locations.
 
