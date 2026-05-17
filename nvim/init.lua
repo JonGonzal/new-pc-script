@@ -235,6 +235,17 @@ require('lazy').setup({
   -- after the plugin has been loaded as `require(MODULE).setup(opts)`.
   --
   { 'nvim-tree/nvim-web-devicons', opts = {} },
+  {
+    'nvim-neo-tree/neo-tree.nvim',
+    branch = 'v3.x',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'MunifTanjim/nui.nvim',
+      'nvim-tree/nvim-web-devicons', -- optional, but recommended
+    },
+    lazy = false,
+    opts = {},
+  },
 
   {
     'tmux-plugins/tmux-resurrect',
@@ -256,7 +267,8 @@ require('lazy').setup({
         { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>u', group = '[U]undotree toggle', mode = { 'n', 'v' } },
-        { '<leader>h', group = '[H]arpoon', mode = { 'n', 'v' } }, -- Enable gitsigns recommended keymaps first
+        { '<leader>h', group = '[H]arpoon', mode = { 'n', 'v' } },
+        { '<leader>m', group = '[M]arkdown', mode = { 'n', 'v' } },
         { 'gr', group = 'LSP Actions', mode = { 'n' } },
       },
     },
@@ -737,7 +749,7 @@ require('lazy').setup({
       -- the rust implementation via `'prefer_rust_with_warning'`
       --
       -- See :h blink-cmp-config-fuzzy for more information
-      fuzzy = { implementation = 'lua' },
+      fuzzy = { implementation = 'prefer_rust_with_warning' },
 
       -- Shows a signature help window while you type arguments for a function
       signature = { enabled = true },
@@ -769,6 +781,23 @@ require('lazy').setup({
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
+  -- {
+  --   'iamcco/markdown-preview.nvim',
+  --   cmd = { 'MarkdownPreviewToggle', 'MarkdownPreview', 'MarkdownPreviewStop' },
+  --   ft = { 'markdown' },
+  --   build = function()
+  --     vim.fn['mkdp#util#install']()
+  --   end,
+  --   keys = {
+  --     { '<leader>mp', '<cmd>MarkdownPreviewToggle<cr>', desc = 'Toggle Markdown Preview', ft = 'markdown' },
+  --   },
+  --   init = function()
+  --     vim.g.mkdp_theme = 'light'
+  --     vim.g.mkdp_open_to_the_world = 1
+  --     vim.g.mkdp_echo_preview_url = 1
+  --   end,
+  -- },
+
   {
     'iamcco/markdown-preview.nvim',
     cmd = { 'MarkdownPreviewToggle', 'MarkdownPreview', 'MarkdownPreviewStop' },
@@ -776,8 +805,20 @@ require('lazy').setup({
     build = function()
       vim.fn['mkdp#util#install']()
     end,
+    keys = {
+      { '<leader>mp', '<cmd>MarkdownPreviewToggle<cr>', desc = 'Toggle Markdown Preview', ft = 'markdown' },
+    },
     init = function()
       vim.g.mkdp_theme = 'light'
+      vim.g.mkdp_open_to_the_world = 1
+      vim.g.mkdp_echo_preview_url = 1
+
+      vim.cmd [[
+      function! OpenWslChrome(url) abort
+        execute 'silent !"/mnt/c/Program Files/Google/Chrome/Application/chrome.exe" ' . shellescape(a:url) . ' &'
+      endfunction
+    ]]
+      vim.g.mkdp_browserfunc = 'OpenWslChrome'
     end,
   },
 
@@ -868,7 +909,7 @@ require('lazy').setup({
 }, { -- Highlight, edit, and navigate code
   'nvim-treesitter/nvim-treesitter',
   config = function()
-    local filetypes = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+    local filetypes = { 'bash', 'c', 'cpp', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'python', 'json' }
     require('nvim-treesitter').install(filetypes)
     vim.api.nvim_create_autocmd('FileType', {
       pattern = filetypes,

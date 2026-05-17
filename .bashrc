@@ -133,18 +133,23 @@ export PATH="$HOME/.local/bin:$PATH"
 
 alias glp='git log --pretty=format:"%C(yellow)%h%Creset - %C(green)%an%Creset, %ar : %s"'
 
-export TERM=xterm-256color
-
-chrome() {
-  local exe=/mnt/c/Program\ Files/Google/Chrome/Application/chrome.exe
-  local target="${1:-}"
-  if [[ -f "$target" ]]; then
-    "$exe" "$(wslpath -w "$(realpath "$target")")"
-  else
-    "$exe" "$target"
-  fi
-}
-
-complete -f chrome
 alias clip='/mnt/c/Windows/System32/clip.exe'
 
+chrome() {
+  # Use double quotes for the path to the .exe
+  local bin="/mnt/c/Program Files/Google/Chrome/Application/chrome.exe"
+
+  if [[ -z "$1" ]]; then
+    # Launch new window
+    "$bin" &>/dev/null &
+  else
+    for f in "$@"; do
+      # Convert to absolute path first, then to Windows format
+      local win_path=$(wslpath -w "$(realpath "$f")")
+      
+      # Execute with quotes around the path to handle spaces
+      "$bin" "$win_path" &>/dev/null &
+    done
+  fi
+}
+complete -f chrome
