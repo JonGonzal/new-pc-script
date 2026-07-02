@@ -128,12 +128,9 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 
-
 export PATH="$HOME/.local/bin:$PATH"
 
 alias glp='git log --pretty=format:"%C(yellow)%h%Creset - %C(green)%an%Creset, %ar : %s"'
-
-alias clip='/mnt/c/Windows/System32/clip.exe'
 
 chrome() {
   # Use double quotes for the path to the .exe
@@ -153,3 +150,5 @@ chrome() {
   fi
 }
 complete -f chrome
+
+alias c='wl-copy'
