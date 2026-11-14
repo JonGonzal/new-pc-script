@@ -68,7 +68,7 @@ vim.o.splitbelow = true
 --   See `:help lua-options`
 --   and `:help lua-guide-options`
 vim.o.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.listchars = { tab = '▸ ', trail = '·', nbsp = '␣', eol = '$' }
 
 -- Preview substitutions live, as you type!
 vim.o.inccommand = 'split'
@@ -152,6 +152,17 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.hl.on_yank()
   end,
 })
+
+vim.api.nvim_create_autocmd('ColorScheme', {
+  callback = function()
+    vim.api.nvim_set_hl(0, 'SpecialKey', { fg = '#39FF14', bg = 'NONE' })
+    vim.api.nvim_set_hl(0, 'NonText', { fg = '#39FF14', bg = 'NONE' })
+  end,
+})
+vim.schedule(function()
+  vim.api.nvim_set_hl(0, 'SpecialKey', { fg = '#39FF14', bg = 'NONE' })
+  vim.api.nvim_set_hl(0, 'NonText', { fg = '#39FF14', bg = 'NONE' })
+end)
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
@@ -341,7 +352,11 @@ require('lazy').setup({
         --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
         --   },
         -- },
-        -- pickers = {}
+        pickers = {
+          colorscheme = {
+            enable_preview = true,
+          },
+        },
         extensions = {
           ['ui-select'] = { require('telescope.themes').get_dropdown() },
         },
@@ -410,6 +425,10 @@ require('lazy').setup({
         builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
           winblend = 10,
           previewer = false,
+          layout_config = {
+            width = 0.8,
+            height = 0.6,
+          },
         })
       end, { desc = '[/] Fuzzily search in current buffer' })
 
@@ -761,20 +780,63 @@ require('lazy').setup({
     -- change the command in the config to whatever the name of that colorscheme is.
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
+    'uhs-robert/oasis.nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
-      ---@diagnostic disable-next-line: missing-fields
-      require('tokyonight').setup {
-        styles = {
-          comments = { italic = false }, -- Disable italics in comments
-        },
+      require('oasis').setup {
+        style = 'moonlight',
+        light_intensity = 3,
       }
 
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-storm'
+      -- The last chosen mode ('dark' or 'light') is persisted in the state dir (see <leader>tt below).
+      local theme_file = vim.fn.stdpath 'state' .. '/colorscheme'
+      local function read_mode()
+        local f = io.open(theme_file, 'r')
+        if not f then return 'dark' end
+        local name = f:read '*l' or ''
+        f:close()
+        return (name == 'light' or name:find 'day') and 'light' or 'dark'
+      end
+
+      -- Recolor the terminal window itself via OSC 11 (wrapped for tmux passthrough)
+      local function set_terminal_bg()
+        local bg = vim.api.nvim_get_hl(0, { name = 'Normal', link = false }).bg
+        if not bg then return end
+        local seq = string.format('\27]11;#%06x\7', bg)
+        if vim.env.TMUX then seq = '\27Ptmux;\27' .. seq .. '\27\\' end
+        pcall(vim.api.nvim_ui_send, seq)
+      end
+
+      local function apply(mode)
+        vim.o.background = mode
+        vim.cmd.colorscheme 'oasis-moonlight'
+        set_terminal_bg()
+      end
+
+      vim.o.background = read_mode()
+      vim.cmd.colorscheme 'oasis-moonlight'
+      vim.api.nvim_create_autocmd('UIEnter', { callback = set_terminal_bg })
+
+      -- Toggle via ~/bin/darkmode|lightmode, which persists the mode and also switches
+      -- Windows Terminal and tmux. The state-file watcher below re-themes every nvim.
+      vim.keymap.set('n', '<leader>tt', function()
+        local cmd = vim.o.background == 'light' and 'darkmode' or 'lightmode'
+        vim.system({ vim.fn.expand('~/bin/' .. cmd) }, {}, function(res)
+          if res.code ~= 0 then
+            vim.schedule(function() vim.notify(cmd .. ' failed: ' .. (res.stderr or ''), vim.log.levels.WARN) end)
+          end
+        end)
+      end, { desc = '[T]oggle light/dark [T]heme' })
+
+      -- `darkmode`/`lightmode` run from any shell write the state file; follow it.
+      local watcher = vim.uv.new_fs_event()
+      if watcher then
+        watcher:start(vim.fn.stdpath 'state', {}, vim.schedule_wrap(function(err, fname)
+          if err or fname ~= 'colorscheme' then return end
+          local mode = read_mode()
+          if mode ~= vim.o.background then apply(mode) end
+        end))
+      end
     end,
   },
 
@@ -818,6 +880,7 @@ require('lazy').setup({
         execute 'silent !"/mnt/c/Program Files/Google/Chrome/Application/chrome.exe" ' . shellescape(a:url) . ' &'
       endfunction
     ]]
+
       vim.g.mkdp_browserfunc = 'OpenWslChrome'
     end,
   },
@@ -840,6 +903,7 @@ require('lazy').setup({
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup()
+      require('mini.trailspace').setup()
 
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
@@ -919,8 +983,6 @@ require('lazy').setup({
     })
   end,
 }, {
-
-  -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
 

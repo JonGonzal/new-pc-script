@@ -18,7 +18,8 @@ sudo apt install -y \
 	git  \
 	fuse  \
 	autorandr \
-	ripgrep
+	ripgrep \
+	jq
 
 echo "Creating directories..."
 mkdir -p "$HOME/documents/repos/"
@@ -50,5 +51,13 @@ mkdir -p "$HOME/.config/i3/config"
 cp -f i3_config "$HOME/.config/i3/config"
 cp .bashrc "$HOME/"
 cp .tmux.conf "$HOME/"
+cp .vimrc "$HOME/"
+
+echo "Installing tmux plugin manager (run prefix + I inside tmux to fetch plugins)..."
+[ -d "$HOME/.tmux/plugins/tpm" ] || git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+
+echo "Installing lightmode/darkmode (Windows Terminal, nvim and tmux theme switchers, WSL only)..."
+mkdir -p "$HOME/bin"
+cp -fP bin/lightmode bin/darkmode "$HOME/bin/"
 
 echo "Environment setup completed."

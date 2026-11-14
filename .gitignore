@@ -1,0 +1,10 @@
+# secrets / certs
+.env*
+*.pem
+*.crt
+*.key
+secrets.env
+# local clutter
+*.bak
+settings.local.json
+lazy-lock.json

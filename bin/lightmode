@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# lightmode / darkmode - switch Windows Terminal, nvim and tmux between light and dark.
+# darkmode is a symlink to this script; behaviour is chosen from the invoked name.
+set -euo pipefail
+
+case "$(basename "$0")" in
+  lightmode) scheme="One Half Light"; ui="light"; flavor="moonlight_light_3" ;;
+  darkmode)  scheme="One Half Dark";  ui="dark";  flavor="cactus_dark" ;;
+  *) echo "invoke as lightmode or darkmode" >&2; exit 2 ;;
+esac
+
+# nvim state is the shared source of truth: running nvims watch this file and re-theme.
+state="${XDG_STATE_HOME:-$HOME/.local/state}/nvim"
+mkdir -p "$state"
+printf '%s' "$ui" > "$state/colorscheme"
+
+# Keep the tmux (oasis) theme in sync, if a tmux server is running.
+if tmux info >/dev/null 2>&1; then
+  printf 'set -g @oasis_flavor "%s"\n' "$flavor" > "$state/tmux_flavor.conf"
+  tmux source-file "$HOME/.tmux.conf" 2>/dev/null || true
+fi
+
+command -v jq >/dev/null || { echo "jq is required (sudo apt install jq)" >&2; exit 1; }
+
+winhome=$(wslpath "$(cmd.exe /c 'echo %LOCALAPPDATA%' 2>/dev/null | tr -d '\r')")
+settings=""
+for f in "$winhome"/Packages/Microsoft.WindowsTerminal*_8wekyb3d8bbwe/LocalState/settings.json \
+         "$winhome/Microsoft/Windows Terminal/settings.json"; do
+  [ -f "$f" ] && { settings=$f; break; }
+done
+[ -n "$settings" ] || { echo "Windows Terminal settings.json not found" >&2; exit 1; }
+
+tmp=$(mktemp "$settings.XXXXXX")
+trap 'rm -f "$tmp"' EXIT
+
+# Set the default scheme, plus any profile that overrides it (those win over defaults).
+jq --arg s "$scheme" --arg t "$ui" '
+  .profiles.defaults.colorScheme = $s
+  | .profiles.list |= map(if has("colorScheme") then .colorScheme = $s else . end)
+  | .theme = $t
+' "$settings" > "$tmp" || { echo "settings.json is not plain JSON (comments?); left unchanged" >&2; exit 1; }
+
+cp "$settings" "$settings.bak"
+cat "$tmp" > "$settings"   # write in place so Terminal's file watcher reloads it
+echo "Windows Terminal -> $scheme"

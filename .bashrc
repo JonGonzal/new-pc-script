@@ -2,6 +2,7 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
+alias xdg-open='wslview'
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
@@ -127,10 +128,13 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-
 export PATH="$HOME/.local/bin:$PATH"
 
 alias glp='git log --pretty=format:"%C(yellow)%h%Creset - %C(green)%an%Creset, %ar : %s"'
+
+alias clip='/mnt/c/Windows/System32/clip.exe'
+alias vi='/usr/bin/nvim'
+alias gb='git branch'
 
 chrome() {
   # Use double quotes for the path to the .exe
@@ -151,4 +155,15 @@ chrome() {
 }
 complete -f chrome
 
-alias c='wl-copy'
+alias c='xclip -selection clipboard'
+
+# WSL2: no Wayland compositor running — use X11 for clipboard
+unset WAYLAND_DISPLAY
+export PATH="$HOME/bin:$PATH"
+
+# /etc/wsl.conf has appendWindowsPath=false, so Windows binaries (notepad.exe,
+# explorer.exe, cmd.exe, powershell.exe, etc.) aren't found by bare name unless
+# their dirs are added here explicitly.
+export PATH="$PATH:/mnt/c/Windows:/mnt/c/Windows/System32:/mnt/c/Windows/System32/WindowsPowerShell/v1.0"
+export BROWSER="/mnt/c/Program Files/Google/Chrome/Application/chrome.exe"
+
